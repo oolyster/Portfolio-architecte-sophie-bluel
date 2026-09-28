@@ -1,6 +1,8 @@
 // variables
 const gallery = document.querySelector(".gallery");
+const categoriesContainer = document.getElementById("categories");
 const API = "http://localhost:5678/api";
+let allCategories = [];
 
 // appel API pour récupérer dynamiquement les travaux de l'architechte
 const fetchAllWorks = async () => {
@@ -46,3 +48,44 @@ const figureWork = (work) => {
   figure.appendChild(figureCaption);
   return figure;
 };
+
+// appel API pour récupérer dynamiquement les catégories des travaux
+const fetchAllCategories = async () => {
+  try {
+    const result = await fetch(`${API}/categories`);
+    if (!result.ok) {
+      console.error("erreur API");
+    }
+    const dataCategories = await result.json();
+    dataCategories.unshift({
+      id: 0,
+      name: "Tous",
+    });
+    allCategories = dataCategories;
+    for (let category of dataCategories) {
+      const button = document.createElement("button");
+      button.innerHTML = category.name;
+      button.setAttribute("data-category", category.id);
+      categoriesContainer.appendChild(button);
+      // le bouton "Tous" est activé par défaut
+      if (category.id === 0) {
+        button.classList.add("active-filter");
+      }
+    }
+    console.log("affichage des catégories récupérés de l'API", dataCategories);
+  } catch (error) {
+    console.error("erreur lors de la récupération des catégories", error);
+  }
+};
+fetchAllCategories();
+
+categoriesContainer.addEventListener("click", (e) => {
+  const allButtons = document.querySelectorAll("#categories button");
+  if (e.target.getAttribute("data-category")) {
+    allButtons.forEach((button) => {
+      button.classList.remove("active-filter");
+    });
+    const categoryId = parseInt(e.target.getAttribute("data-category"));
+    e.target.classList.add("active-filter");
+  }
+});
