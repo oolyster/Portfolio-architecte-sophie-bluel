@@ -3,6 +3,7 @@ const gallery = document.querySelector(".gallery");
 const categoriesContainer = document.getElementById("categories");
 const API = "http://localhost:5678/api";
 let allCategories = [];
+let dataWorks = [];
 
 // appel API pour récupérer dynamiquement les travaux de l'architechte
 const fetchAllWorks = async () => {
@@ -14,7 +15,7 @@ const fetchAllWorks = async () => {
       console.error("erreur API");
     }
     // récupération des données JSON
-    const dataWorks = await result.json();
+    dataWorks = await result.json();
     // affichage des travaux dans la galerie
     displayGallery(dataWorks);
     // affichage dans la console pour vérification
@@ -22,6 +23,7 @@ const fetchAllWorks = async () => {
   } catch (error) {
     console.error("erreur lors de la récupération", error);
   }
+  return dataWorks;
 };
 
 // appel de la fonction pour récupérer les travaux
@@ -79,13 +81,24 @@ const fetchAllCategories = async () => {
 };
 fetchAllCategories();
 
-categoriesContainer.addEventListener("click", (e) => {
+// gestion du clic sur les boutons de filtre
+
+const filteredCategoryButton = (e) => {
   const allButtons = document.querySelectorAll("#categories button");
   if (e.target.getAttribute("data-category")) {
     allButtons.forEach((button) => {
       button.classList.remove("active-filter");
     });
     const categoryId = parseInt(e.target.getAttribute("data-category"));
+    console.log("au clic sur le bouton", categoryId);
     e.target.classList.add("active-filter");
+    const filteredWorks =
+      categoryId === 0
+        ? dataWorks
+        : dataWorks.filter((work) => work.categoryId === categoryId);
+    console.log("filteredWorks", filteredWorks);
+    displayGallery(filteredWorks);
   }
-});
+};
+
+categoriesContainer.addEventListener("click", filteredCategoryButton);
