@@ -102,3 +102,39 @@ const filteredCategoryButton = (e) => {
 };
 
 categoriesContainer.addEventListener("click", filteredCategoryButton);
+
+/*
+Gestion du mode connecté
+*/
+
+// je récupère les éléments dont j'ai besoin
+const loginLink = document.getElementById("login-link");
+const editBanner = document.getElementById("edit-banner");
+const editButton = document.getElementById("edit-button");
+const categories = document.getElementById("categories");
+
+// je récupère le token (null s'il n'existe pas)
+const token = localStorage.getItem("token");
+
+// SI le token existe : mode connecté
+if (token) {
+  loginLink.textContent = "logout"; // je change le texte
+  loginLink.addEventListener("click", () => {
+    // au clic :
+    localStorage.removeItem("token"); //   je supprime le token
+    window.location.reload(); //   je recharge la page
+  });
+
+  editBanner.hidden = false; // j'affiche le bandeau
+  editButton.hidden = false; // j'affiche "modifier"
+  categories.hidden = true; // je masque les filtres
+} else {
+  // SINON : mode visiteur
+  loginLink.addEventListener("click", () => {
+    window.location.href = "login.html"; // redirection
+  });
+
+  editBanner.hidden = true;
+  editButton.hidden = true;
+  categories.hidden = false;
+}
