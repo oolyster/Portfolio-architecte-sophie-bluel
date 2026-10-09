@@ -1,6 +1,9 @@
 // variables
 const gallery = document.querySelector(".gallery");
+const categoriesContainer = document.getElementById("categories");
 const API = "http://localhost:5678/api";
+let allCategories = [];
+let dataWorks = [];
 
 // appel API pour récupérer dynamiquement les travaux de l'architechte
 const fetchAllWorks = async () => {
@@ -12,7 +15,7 @@ const fetchAllWorks = async () => {
       console.error("erreur API");
     }
     // récupération des données JSON
-    const dataWorks = await result.json();
+    dataWorks = await result.json();
     // affichage des travaux dans la galerie
     displayGallery(dataWorks);
     // affichage dans la console pour vérification
@@ -20,6 +23,7 @@ const fetchAllWorks = async () => {
   } catch (error) {
     console.error("erreur lors de la récupération", error);
   }
+  return dataWorks;
 };
 
 // appel de la fonction pour récupérer les travaux
@@ -46,3 +50,55 @@ const figureWork = (work) => {
   figure.appendChild(figureCaption);
   return figure;
 };
+
+// appel API pour récupérer dynamiquement les catégories des travaux
+const fetchAllCategories = async () => {
+  try {
+    const result = await fetch(`${API}/categories`);
+    if (!result.ok) {
+      console.error("erreur API");
+    }
+    const dataCategories = await result.json();
+    dataCategories.unshift({
+      id: 0,
+      name: "Tous",
+    });
+    allCategories = dataCategories;
+    for (let category of dataCategories) {
+      const button = document.createElement("button");
+      button.innerHTML = category.name;
+      button.setAttribute("data-category", category.id);
+      categoriesContainer.appendChild(button);
+      // le bouton "Tous" est activé par défaut
+      if (category.id === 0) {
+        button.classList.add("active-filter");
+      }
+    }
+    console.log("affichage des catégories récupérés de l'API", dataCategories);
+  } catch (error) {
+    console.error("erreur lors de la récupération des catégories", error);
+  }
+};
+fetchAllCategories();
+
+// gestion du clic sur les boutons de filtre
+
+const filteredCategoryButton = (e) => {
+  const allButtons = document.querySelectorAll("#categories button");
+  if (e.target.getAttribute("data-category")) {
+    allButtons.forEach((button) => {
+      button.classList.remove("active-filter");
+    });
+    const categoryId = parseInt(e.target.getAttribute("data-category"));
+    console.log("au clic sur le bouton", categoryId);
+    e.target.classList.add("active-filter");
+    const filteredWorks =
+      categoryId === 0
+        ? dataWorks
+        : dataWorks.filter((work) => work.categoryId === categoryId);
+    console.log("filteredWorks", filteredWorks);
+    displayGallery(filteredWorks);
+  }
+};
+
+categoriesContainer.addEventListener("click", filteredCategoryButton);
