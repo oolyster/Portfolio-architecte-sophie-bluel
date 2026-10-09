@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="./assets/style.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
+            <nav>
+                <ul>
+                    <li>projets</li>
+                    <li>contact</li>
+                    <li>login</li>
+                    <li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <div class="contact" id="contact">
+                <h2 id="titre">Log In</h2>
+                <div id="msg-error">
+                    <i class="fa-sharp fa-solid fa-triangle-exclamation"></i>
+                    <h3>Erreur dans l’identifiant ou le mot de passe</h3>
+                </div>
+                <form action="#" method="post" class="login" id="loginForm">
+                    <label for="email">E-mail</label>
+                    <input type="email" name="email" id="email" />
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="mdp" id="password" />
+                    <input type="submit" value="Se connecter" />
+                </form>
+                <a href="#">Mot de passe oublié</a>
+            </div>
+        </main>
+        <footer class="fin_de_page">
+            <nav>
+                <ul>
+                    <li>Mentions Légales</li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+    <script src="./js/login.js"></script>
+</body>
+
+</html>
