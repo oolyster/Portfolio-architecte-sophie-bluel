@@ -119,7 +119,9 @@ const token = localStorage.getItem("token");
 // SI le token existe : mode connecté
 if (token) {
   loginLink.textContent = "logout"; // je change le texte
-  loginLink.addEventListener("click", () => {
+  loginLink.setAttribute("href", "index.html");
+  loginLink.addEventListener("click", (event) => {
+    event.preventDefault();
     // au clic :
     localStorage.removeItem("token"); //   je supprime le token
     window.location.reload(); //   je recharge la page
@@ -138,3 +140,70 @@ if (token) {
   editButton.hidden = true;
   categories.hidden = false;
 }
+
+/*
+modale
+*/
+
+//  je récupère les éléments dont j'ai besoin
+const modal = document.getElementById("modal");
+const closeButton = document.getElementById("close-modal");
+const modalGallery = document.getElementById("modal-gallery");
+const modalTitle = document.getElementById("modal-title");
+const modalActionButton = document.getElementById("modal-action-button");
+
+const displayModalGallery = (works) => {
+  modalGallery.innerHTML = "";
+  works.forEach((work) => {
+    const figureRecup = modalFigure(work);
+    modalGallery.appendChild(figureRecup);
+  });
+};
+
+// je crée un élément figure pour chaque travail dans la modale
+const modalFigure = (work) => {
+  const figure = document.createElement("figure");
+  figure.style.position = "relative";
+  figure.classList.add("modal-figure");
+  const image = document.createElement("img");
+  image.src = work.imageUrl;
+  image.alt = work.title;
+  figure.appendChild(image);
+  const trashButton = document.createElement("button");
+  trashButton.style.position = "absolute";
+  trashButton.style.top = "2px";
+  trashButton.style.right = "2px";
+  trashButton.dataset.id = work.id;
+  const trashIcon = document.createElement("i");
+  trashIcon.classList.add("fa-solid", "fa-trash-can");
+  trashButton.appendChild(trashIcon);
+  figure.appendChild(trashButton);
+  return figure;
+};
+
+const showGalleryView = () => {
+  modalTitle.textContent = "Galerie photo";
+  modalActionButton.textContent = "Ajouter une photo";
+};
+
+// j'affiche la modale au clic sur le bouton "modifier"
+const openModal = () => {
+  modal.hidden = false;
+  displayModalGallery(dataWorks);
+  showGalleryView();
+};
+editButton.addEventListener("click", openModal);
+
+// je ferme la modale au clic sur le bouton "fermer"
+const closeModal = () => {
+  modal.hidden = true;
+};
+
+closeButton.addEventListener("click", closeModal);
+
+// je ferme la modale au clic en dehors de la modale
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
+});

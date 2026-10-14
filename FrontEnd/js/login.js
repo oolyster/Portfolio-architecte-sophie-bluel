@@ -3,6 +3,12 @@ const loginForm = document.getElementById("loginForm");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 const msgErreur = document.getElementById("msg-error");
+const token = localStorage.getItem("token");
+
+// redirection login.html si connecté
+if (token) {
+  window.location.replace("index.html");
+}
 
 // fonction pour afficher le message d'erreur
 const showError = () => {
