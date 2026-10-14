@@ -136,7 +136,7 @@ table {
 
 /** end reset css**/
 body {
-	max-width: 1140px;
+	max-width: 100vw;
 	margin: auto;
 	font-family: 'Work Sans';
 	font-size: 14px;
@@ -175,6 +175,15 @@ h2 {
 	color: #1D6154
 }
 
+a {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	color: #B1663C !important;
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -188,8 +197,29 @@ nav li {
 }
 
 li:hover {
-	color: #B1663C;
+	color: #B1663C !important;
 }
+
+.wrapper {
+	max-width: 1140px;
+	margin: auto
+}
+
+#edit-banner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	background: #000;
+	color: #fff;
+	height: 59px;
+}
+
+
+#login-link {
+	cursor: pointer;
+}
+
 
 #introduction {
 	display: flex;
@@ -217,6 +247,25 @@ li:hover {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+/* alignement titre et bouton */
+.portfolio-title {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 30px;
+	margin-bottom: 50px;
+}
+
+/* bouton d'édition */
+#edit-button {
+	background: none;
+	border: none;
+	font-family: 'Work Sans';
+	font-size: 14px;
+	cursor: pointer;
+}
+
 
 #portfolio h2 {
 	text-align: center;
@@ -316,4 +365,8 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+[hidden] {
+	display: none !important;
 }
