@@ -151,6 +151,80 @@ const closeButton = document.getElementById("close-modal");
 const modalGallery = document.getElementById("modal-gallery");
 const modalTitle = document.getElementById("modal-title");
 const modalActionButton = document.getElementById("modal-action-button");
+const backButton = document.getElementById("return-modal");
+const addForm = document.getElementById("add-form");
+const categorySelect = document.getElementById("category-select");
+const imageInput = document.getElementById("image-input");
+const preview = document.getElementById("preview");
+const titleInput = document.getElementById("title-input");
+const formError = document.getElementById("form-error");
+
+const checkForm = () => {
+  if (
+    imageInput.files.length > 0 &&
+    titleInput.value.trim() !== "" &&
+    categorySelect.value !== ""
+  ) {
+    modalActionButton.disabled = false;
+  } else {
+    modalActionButton.disabled = true;
+  }
+};
+
+const handleImageChange = () => {
+  const file = imageInput.files[0];
+  if (!file) {
+    return;
+  }
+  if (
+    ["image/jpeg", "image/png"].includes(file.type) &&
+    file.size < 4 * 1024 * 1024
+  ) {
+    formError.hidden = true;
+    preview.src = URL.createObjectURL(file);
+    preview.hidden = false;
+  } else {
+    formError.hidden = false;
+    formError.textContent =
+      "Le fichier attendu doit être au format JPEG ou PNG et faire moins de 4 Mo";
+    imageInput.value = "";
+    preview.hidden = true;
+  }
+  checkForm();
+};
+
+imageInput.addEventListener("change", handleImageChange);
+titleInput.addEventListener("input", checkForm);
+categorySelect.addEventListener("change", checkForm);
+
+const fillCategorySelect = () => {
+  categorySelect.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Choisissez une catégorie";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  categorySelect.appendChild(defaultOption);
+  const categoriesForSelect = allCategories.filter(
+    (category) => category.id !== 0,
+  );
+  for (let category of categoriesForSelect) {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    categorySelect.appendChild(option);
+  }
+};
+
+const showAddView = () => {
+  modalTitle.textContent = "Ajout photo";
+  modalActionButton.textContent = "Valider";
+  modalGallery.hidden = true;
+  addForm.hidden = false;
+  backButton.hidden = false;
+  fillCategorySelect();
+  checkForm();
+};
 
 const deleteWork = async (id) => {
   try {
@@ -208,6 +282,11 @@ const modalFigure = (work) => {
 const showGalleryView = () => {
   modalTitle.textContent = "Galerie photo";
   modalActionButton.textContent = "Ajouter une photo";
+  modalActionButton.disabled = false;
+  modalActionButton.onclick = showAddView;
+  modalGallery.hidden = false;
+  addForm.hidden = true;
+  backButton.hidden = true;
 };
 
 // j'affiche la modale au clic sur le bouton "modifier"
@@ -224,6 +303,7 @@ const closeModal = () => {
 };
 
 closeButton.addEventListener("click", closeModal);
+backButton.addEventListener("click", showGalleryView);
 
 // je ferme la modale au clic en dehors de la modale
 modal.addEventListener("click", (e) => {

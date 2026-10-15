@@ -467,3 +467,18 @@ footer nav ul {
 	text-align: center;
 	border-radius: 60px;
 }
+
+#modal-action-button:disabled {
+	background-color: #a7a7a7;
+}
+
+#add-form {
+	display: flex;
+	flex-direction: column;
+	margin: 0 75px;
+	width: 420px
+}
+
+#preview {
+	width: 80px;
+}
