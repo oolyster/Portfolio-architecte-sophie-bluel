@@ -202,7 +202,14 @@ li:hover {
 
 .wrapper {
 	max-width: 1140px;
-	margin: auto
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+main {
+	flex: 1;
 }
 
 #edit-banner {
@@ -252,7 +259,7 @@ li:hover {
 .portfolio-title {
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: baseline;
 	gap: 30px;
 	margin-bottom: 50px;
 }

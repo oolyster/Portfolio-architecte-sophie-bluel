@@ -152,6 +152,29 @@ const modalGallery = document.getElementById("modal-gallery");
 const modalTitle = document.getElementById("modal-title");
 const modalActionButton = document.getElementById("modal-action-button");
 
+const deleteWork = async (id) => {
+  try {
+    const result = await fetch(`${API}/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        accept: `*/*`,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!result.ok) {
+      console.error("erreur API");
+      return;
+    }
+    dataWorks = dataWorks.filter((work) => work.id !== Number(id));
+    displayModalGallery(dataWorks);
+    displayGallery(dataWorks);
+    console.log("affichage des works récupérés de l'API", dataWorks);
+  } catch (error) {
+    console.error("erreur lors de la récupération", error);
+  }
+  return dataWorks;
+};
+
 const displayModalGallery = (works) => {
   modalGallery.innerHTML = "";
   works.forEach((work) => {
@@ -170,6 +193,7 @@ const modalFigure = (work) => {
   image.alt = work.title;
   figure.appendChild(image);
   const trashButton = document.createElement("button");
+  trashButton.addEventListener("click", () => deleteWork(work.id));
   trashButton.style.position = "absolute";
   trashButton.style.top = "2px";
   trashButton.style.right = "2px";
