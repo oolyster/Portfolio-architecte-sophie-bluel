@@ -600,7 +600,7 @@ input[type="submit"] {
 	width: 230px;
 }
 
-#modal-action-button:disabled {
+#modal-action-button.inactive {
 	background-color: var(--disabled-color);
 }
 

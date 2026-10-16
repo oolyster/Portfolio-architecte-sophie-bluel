@@ -192,7 +192,7 @@ const closeModal = () => {
 const showGalleryView = () => {
   modalTitle.textContent = "Galerie photo";
   modalActionButton.textContent = "Ajouter une photo";
-  modalActionButton.disabled = false;
+  modalActionButton.classList.remove("inactive");
   modalActionButton.onclick = showAddView;
   modalGallery.hidden = false;
   addForm.hidden = true;
@@ -297,13 +297,23 @@ const handleImageChange = () => {
   checkForm();
 };
 
-// Active le bouton "Valider" seulement si l'image, le titre et la catégorie sont remplis.
-const checkForm = () => {
-  const isFormValid =
+// Indique si l'image, le titre et la catégorie sont remplis (renvoie true ou false)
+const isFormValid = () => {
+  return (
     imageInput.files.length > 0 &&
     titleInput.value.trim() !== "" &&
-    categorySelect.value !== "";
-  modalActionButton.disabled = !isFormValid;
+    categorySelect.value !== ""
+  );
+};
+
+// Grise le bouton "Valider" tant que le formulaire est incomplet
+const checkForm = () => {
+  const formComplete = isFormValid();
+  modalActionButton.classList.toggle("inactive", !formComplete);
+  // formulaire complet : on retire un éventuel message "champs manquants"
+  if (formComplete) {
+    formError.hidden = true;
+  }
 };
 
 // Affiche un message d'erreur sous le formulaire d'ajout
@@ -322,6 +332,11 @@ const resetForm = () => {
 
 // Envoie le nouveau travail à l'API, met à jour les deux galeries et revient à la vue galerie.
 const submitForm = async () => {
+  // formulaire incomplet : on prévient l'utilisateur et on n'envoie rien
+  if (!isFormValid()) {
+    showFormError("Veuillez ajouter une image, un titre et une catégorie.");
+    return;
+  }
   const formData = new FormData();
   formData.append("image", imageInput.files[0]);
   formData.append("title", titleInput.value);
