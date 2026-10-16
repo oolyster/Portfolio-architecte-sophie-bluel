@@ -1,3 +1,7 @@
+/***********************************/
+/****** RESET **********************/
+/***********************************/
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
@@ -125,7 +129,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-	content: '';
+	content: "";
 	content: none;
 }
 
@@ -136,50 +140,74 @@ table {
 
 /** end reset css**/
 
+/***********************************/
+/****** VARIABLES ******************/
+/***********************************/
+
 :root {
+	/* couleurs principales */
 	--primary-color: #1d6154;
 	--accent-color: #b1663c;
+	--white: #fff;
+	--black: #000;
+
+	/* couleurs secondaires */
+	--filter-bg-color: #fffef8;
+	--overlay-color: rgb(0 0 0 / 50%);
+	--label-color: #3d3d3d;
+	--disabled-color: #a7a7a7;
+	--error-color: var(--accent-color);
+
+	/* zone d'upload */
 	--upload-color: #e8f1f6;
-	--shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	--upload-icon-color: #b9c5cc;
+	--upload-text-color: #444444;
+	--upload-btn-bg: #cbd6dc;
+	--upload-btn-color: #306685;
+
+	/* ombres */
+	--shadow: 0 4px 14px rgb(0 0 0 / 9%);
+
+	/* fonts */
+	--font-title: "Syne", sans-serif;
+	--font-body: "Work Sans", sans-serif;
+
+	/* dimensions */
+	--modal-content-width: 420px;
+
+	/* arrondis */
+	--radius-pill: 60px;
+	--radius-modal: 10px;
 }
 
-
+/***********************************/
+/****** BASE ***********************/
+/***********************************/
 
 body {
 	max-width: 100vw;
 	margin: auto;
-	font-family: 'Work Sans';
+	font-family: var(--font-body);
 	font-size: 14px;
-}
-
-header {
-	display: flex;
-	justify-content: space-between;
-	margin: 50px 0
-}
-
-section {
-	margin: 50px 0
 }
 
 h1 {
 	display: flex;
 	flex-direction: column;
-	font-family: 'Syne';
+	font-family: var(--font-title);
 	font-size: 22px;
 	font-weight: 800;
 	color: var(--accent-color);
 }
 
 h1>span {
-	font-family: 'Work Sans';
+	font-family: var(--font-body);
 	font-size: 10px;
 	letter-spacing: 0.1em;
-	;
 }
 
 h2 {
-	font-family: 'Syne';
+	font-family: var(--font-title);
 	font-weight: 700;
 	font-size: 30px;
 	color: var(--primary-color);
@@ -187,18 +215,16 @@ h2 {
 
 a {
 	text-decoration: none;
-	color: black;
+	color: var(--black);
 }
 
 a:hover {
-	color: var(--accent-color) !important;
+	color: var(--accent-color);
 }
 
 nav ul {
 	display: flex;
 	align-items: center;
-	list-style-type: none;
-
 }
 
 nav li {
@@ -207,7 +233,21 @@ nav li {
 }
 
 li:hover {
-	color: var(--accent-color) !important;
+	color: var(--accent-color);
+}
+
+#login-link {
+	cursor: pointer;
+}
+
+/***********************************/
+/****** MISE EN PAGE ***************/
+/***********************************/
+
+header {
+	display: flex;
+	justify-content: space-between;
+	margin: 50px 0;
 }
 
 .wrapper {
@@ -218,25 +258,31 @@ li:hover {
 	min-height: 100vh;
 }
 
+section {
+	margin: 50px 0;
+}
+
 main {
 	flex: 1;
 }
+
+/***********************************/
+/****** EDIT BANNER ****************/
+/***********************************/
 
 #edit-banner {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 12px;
-	background: #000;
-	color: #fff;
+	background: var(--black);
+	color: var(--white);
 	height: 59px;
 }
 
-
-#login-link {
-	cursor: pointer;
-}
-
+/***********************************/
+/****** INTRODUCTION ***************/
+/***********************************/
 
 #introduction {
 	display: flex;
@@ -244,7 +290,7 @@ main {
 }
 
 #introduction figure {
-	flex: 1
+	flex: 1;
 }
 
 #introduction img {
@@ -254,7 +300,7 @@ main {
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
 }
 
 #introduction h2 {
@@ -264,6 +310,10 @@ main {
 #introduction p {
 	margin-bottom: 0.5em;
 }
+
+/***********************************/
+/****** PORTFOLIO ******************/
+/***********************************/
 
 /* alignement titre et bouton */
 .portfolio-title {
@@ -278,11 +328,9 @@ main {
 #edit-button {
 	background: none;
 	border: none;
-	font-family: 'Work Sans';
-	font-size: 14px;
+	font: inherit;
 	cursor: pointer;
 }
-
 
 #portfolio h2 {
 	text-align: center;
@@ -290,19 +338,17 @@ main {
 }
 
 .gallery {
-	width: 100%;
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-column-gap: 20px;
-	grid-row-gap: 20px;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
 }
 
 .gallery img {
 	width: 100%;
-
 }
 
-/*style pour les boutons de filtres*/
+/****** FILTRES ********************/
+
 .filters {
 	display: flex;
 	justify-content: center;
@@ -312,23 +358,26 @@ main {
 
 .filters button {
 	color: var(--primary-color);
-	background-color: #fffef8;
+	background-color: var(--filter-bg-color);
 	margin: 0;
 	border: 1px solid var(--primary-color);
-	font-family: "Syne";
+	font-family: var(--font-title);
 	font-weight: 700;
-	border-radius: 60px;
+	border-radius: var(--radius-pill);
 	text-align: center;
 	cursor: pointer;
 	font-size: 110%;
 	padding: 10px;
 }
 
-.active-filter {
-	color: white !important;
-	background-color: var(--primary-color) !important;
-	cursor: pointer;
+.filters .active-filter {
+	color: var(--white);
+	background-color: var(--primary-color);
 }
+
+/***********************************/
+/****** CONTACT ********************/
+/***********************************/
 
 #contact {
 	width: 50%;
@@ -337,7 +386,6 @@ main {
 
 #contact>* {
 	text-align: center;
-
 }
 
 #contact h2 {
@@ -352,57 +400,66 @@ main {
 }
 
 #contact label {
-	margin: 2em 0 1em 0;
+	margin: 2em 0 1em;
 }
+
+/***********************************/
+/****** FOOTER *********************/
+/***********************************/
 
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
 }
 
-[hidden] {
-	display: none !important;
-}
+/***********************************/
+/****** MODALE *********************/
+/***********************************/
+
+/****** OVERLAY ********************/
 
 #modal {
 	position: fixed;
 	inset: 0;
-	background-color: rgb(0 0 0 / 50%);
+	background-color: var(--overlay-color);
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
+/****** BOX ************************/
+
 .modal-box {
 	box-sizing: border-box;
 	width: 630px;
 	height: 730px;
-	background-color: white;
+	background-color: var(--white);
 	padding: 26px 30px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 40px;
-	border-radius: 10px;
+	border-radius: var(--radius-modal);
 	max-height: 90vh;
 }
 
+/****** NAVIGATION *****************/
+
 #nav-modal {
 	display: flex;
-	flex-direction: row;
 	width: 100%;
 	justify-content: space-between;
 }
 
-.nav-modal {
+.modal-nav-btn {
 	width: 24px;
 	height: 24px;
 	border: none;
 	background-color: transparent;
 }
 
-.nav-modal i {
+.modal-nav-btn i {
 	font-size: large;
 }
 
@@ -410,23 +467,20 @@ footer nav ul {
 	margin-left: auto;
 }
 
+/****** CONTENU ********************/
+
 #modal-title {
 	font-size: 26px;
 }
 
 #modal-gallery {
 	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-columns: repeat(5, 1fr);
 	gap: 5px;
-	margin: 0 75px;
-	width: 420px;
+	width: var(--modal-content-width);
 	overflow-y: auto;
-	max-height: 325px;
+	max-height: 340px;
 	flex-shrink: 0;
-}
-
-.modal-figure {
-	width: 100%;
 }
 
 .modal-figure img {
@@ -436,7 +490,7 @@ footer nav ul {
 }
 
 .modal-action {
-	width: 420px;
+	width: var(--modal-content-width);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -450,8 +504,7 @@ footer nav ul {
 #add-form {
 	display: flex;
 	flex-direction: column;
-	margin: 0 75px;
-	width: 420px
+	width: var(--modal-content-width);
 }
 
 .upload-zone {
@@ -467,12 +520,12 @@ footer nav ul {
 
 .upload-zone i {
 	font-size: 70px;
-	color: #b9c5cc;
+	color: var(--upload-icon-color);
 }
 
 .upload-zone p {
 	font-size: 10px;
-	color: #444444;
+	color: var(--upload-text-color);
 }
 
 #preview {
@@ -487,39 +540,39 @@ footer nav ul {
 #add-form label {
 	margin-top: 27px;
 	margin-bottom: 10px;
-	color: #3d3d3d;
-	font-weight: bold;
+	color: var(--label-color);
+	font-weight: 700;
 }
 
-.upload-button {
-	background-color: #cbd6dc;
-	color: #306685 !important;
-	border-radius: 50px;
+#add-form .upload-button {
+	background-color: var(--upload-btn-bg);
+	color: var(--upload-btn-color);
+	border-radius: var(--radius-pill);
 	padding: 10px 30px;
 	cursor: pointer;
-	margin-top: 0 !important;
+	margin-top: 0;
 }
 
 #form-error {
-	color: red;
+	color: var(--error-color);
 	margin-top: 20px;
 }
 
 /***********************************/
-/****** COMPSANTS ******************/
+/****** COMPOSANTS ******************/
 /***********************************/
 
 /****** BOUTONS ********************/
 
 .btn-primary {
-	font-family: 'Syne';
+	font-family: var(--font-title);
 	font-weight: 700;
 	height: 50px;
-	color: white;
+	color: var(--white);
 	background-color: var(--primary-color);
 	margin: 1.8em auto;
 	text-align: center;
-	border-radius: 60px;
+	border-radius: var(--radius-pill);
 	font-size: 1.2em;
 	border: none;
 	box-shadow: var(--shadow);
@@ -534,7 +587,7 @@ input[type="submit"] {
 }
 
 #modal-action-button:disabled {
-	background-color: #a7a7a7;
+	background-color: var(--disabled-color);
 }
 
 /****** CHAMPS *********************/
@@ -544,12 +597,19 @@ input[type="submit"] {
 	font-size: 1.2em;
 	border: none;
 	box-shadow: var(--shadow);
-	padding-left: 16px;
-	padding-right: 16px;
-	font-family: 'Work Sans';
-	background-color: white;
+	padding: 0 16px;
+	font-family: var(--font-body);
+	background-color: var(--white);
 }
 
 #contact textarea {
 	height: 150px;
+}
+
+/***********************************/
+/****** UTILITAIRE ******************/
+/***********************************/
+
+[hidden] {
+	display: none !important;
 }
