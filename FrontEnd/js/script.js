@@ -159,6 +159,48 @@ const preview = document.getElementById("preview");
 const titleInput = document.getElementById("title-input");
 const formError = document.getElementById("form-error");
 
+const resetForm = () => {
+  addForm.reset();
+  preview.hidden = true;
+  formError.hidden = true;
+  preview.src = "";
+};
+
+const submitForm = async () => {
+  const formData = new FormData();
+  formData.append("image", imageInput.files[0]);
+  formData.append("title", titleInput.value);
+  formData.append("category", categorySelect.value);
+
+  try {
+    const response = await fetch(`${API}/works`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    if (!response.ok) {
+      console.error("erreur lors de l'envoi", response.status);
+      formError.hidden = false;
+      formError.textContent =
+        "Il y a eu une erreur lors de l'envoi. Veuillez réessayer.";
+      return;
+    }
+    const newWork = await response.json();
+    dataWorks.push(newWork);
+    displayGallery(dataWorks);
+    displayModalGallery(dataWorks);
+    resetForm();
+    showGalleryView();
+  } catch (error) {
+    console.error("erreur lors de l'envoi", error);
+    formError.hidden = false;
+    formError.textContent =
+      "Il y a eu une erreur lors de l'envoi. Veuillez réessayer.";
+  }
+};
+
 const checkForm = () => {
   if (
     imageInput.files.length > 0 &&
@@ -219,6 +261,7 @@ const fillCategorySelect = () => {
 const showAddView = () => {
   modalTitle.textContent = "Ajout photo";
   modalActionButton.textContent = "Valider";
+  modalActionButton.onclick = submitForm;
   modalGallery.hidden = true;
   addForm.hidden = false;
   backButton.hidden = false;

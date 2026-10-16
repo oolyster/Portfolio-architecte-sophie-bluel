@@ -389,7 +389,7 @@ footer nav ul {
 
 .modal-box {
 	max-width: 630px;
-	max-height: 670px;
+	max-height: 730px;
 	background-color: white;
 	padding: 26px 30px;
 	display: flex;
@@ -479,6 +479,63 @@ footer nav ul {
 	width: 420px
 }
 
+.upload-zone {
+	background-color: #e8f1f6;
+	height: 170px;
+	gap: 8px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.upload-zone i {
+	font-size: 70px;
+	color: #b9c5cc;
+}
+
+.upload-zone p {
+	font-size: 10px;
+	color: #444444;
+}
+
 #preview {
-	width: 80px;
+	background-color: #e8f1f6;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+#add-form label {
+	margin-top: 30px;
+	margin-bottom: 10px;
+	color: #3d3d3d;
+	font-weight: bold;
+}
+
+#title-input,
+#category-select {
+	height: 51px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	font-family: 'Work Sans';
+	padding-left: 16px;
+	background-color: white;
+}
+
+.upload-button {
+	background-color: #cbd6dc;
+	color: #306685 !important;
+	border-radius: 50px;
+	padding: 10px 30px;
+	cursor: pointer;
+	margin-top: 0 !important;
+}
+
+#form-error {
+	color: red;
+	margin-top: 20px;
 }

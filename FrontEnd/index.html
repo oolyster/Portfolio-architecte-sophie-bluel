@@ -84,8 +84,13 @@
 				<h3 id="modal-title"></h3>
 				<div id="modal-gallery"></div>
 				<form id="add-form" hidden>
-					<input type="file" id="image-input" accept="image/png, image/jpeg">
-					<img id="preview" hidden>
+					<div class="upload-zone">
+						<i class="fa-regular fa-image"></i>
+						<label for="image-input" class="upload-button">+ Ajouter photo</label>
+						<input type="file" id="image-input" accept="image/png, image/jpeg" hidden>
+						<p>jpg, png : 4mo max</p>
+						<img id="preview" hidden>
+					</div>
 					<label for="title-input">Titre</label>
 					<input type="text" name="title-input" id="title-input">
 					<label for="category-select">Catégorie</label>
