@@ -1,9 +1,46 @@
-// variables
+// ==================================================
+// CONSTANTES
+// ==================================================
+const API = "http://localhost:5678/api";
+// token de connexion (null si l'utilisateur n'est pas connecté)
+const token = localStorage.getItem("token");
+
+// ==================================================
+// DOM
+// ==================================================
+// galerie et filtres
 const gallery = document.querySelector(".gallery");
 const categoriesContainer = document.getElementById("categories");
-const API = "http://localhost:5678/api";
+
+// mode connecté
+const loginLink = document.getElementById("login-link");
+const editBanner = document.getElementById("edit-banner");
+const editButton = document.getElementById("edit-button");
+
+// modale
+const modal = document.getElementById("modal");
+const closeButton = document.getElementById("close-modal");
+const modalGallery = document.getElementById("modal-gallery");
+const modalTitle = document.getElementById("modal-title");
+const modalActionButton = document.getElementById("modal-action-button");
+const backButton = document.getElementById("return-modal");
+const addForm = document.getElementById("add-form");
+const categorySelect = document.getElementById("category-select");
+const imageInput = document.getElementById("image-input");
+const preview = document.getElementById("preview");
+const titleInput = document.getElementById("title-input");
+const formError = document.getElementById("form-error");
+
+// ==================================================
+// DONNÉES
+// ==================================================
+// remplies par les appels API, puis utilisées par la galerie, les filtres et la modale
 let allCategories = [];
 let dataWorks = [];
+
+// ==================================================
+// GALERIE
+// ==================================================
 
 // appel API pour récupérer dynamiquement les travaux de l'architechte
 const fetchAllWorks = async () => {
@@ -12,7 +49,7 @@ const fetchAllWorks = async () => {
     const result = await fetch(`${API}/works`);
     // vérification si la requête a réussi
     if (!result.ok) {
-      console.error("erreur API");
+      throw new Error(`erreur API : ${result.status}`);
     }
     // récupération des données JSON
     dataWorks = await result.json();
@@ -25,9 +62,6 @@ const fetchAllWorks = async () => {
   }
   return dataWorks;
 };
-
-// appel de la fonction pour récupérer les travaux
-fetchAllWorks();
 
 // fonction pour afficher les travaux dans la galerie
 const displayGallery = (works) => {
@@ -51,12 +85,16 @@ const figureWork = (work) => {
   return figure;
 };
 
+// ==================================================
+// FILTRES
+// ==================================================
+
 // appel API pour récupérer dynamiquement les catégories des travaux
 const fetchAllCategories = async () => {
   try {
     const result = await fetch(`${API}/categories`);
     if (!result.ok) {
-      console.error("erreur API");
+      throw new Error(`erreur API : ${result.status}`);
     }
     const dataCategories = await result.json();
     dataCategories.unshift({
@@ -66,7 +104,7 @@ const fetchAllCategories = async () => {
     allCategories = dataCategories;
     for (let category of dataCategories) {
       const button = document.createElement("button");
-      button.innerHTML = category.name;
+      button.textContent = category.name;
       button.setAttribute("data-category", category.id);
       categoriesContainer.appendChild(button);
       // le bouton "Tous" est activé par défaut
@@ -79,10 +117,8 @@ const fetchAllCategories = async () => {
     console.error("erreur lors de la récupération des catégories", error);
   }
 };
-fetchAllCategories();
 
 // gestion du clic sur les boutons de filtre
-
 const filteredCategoryButton = (e) => {
   const allButtons = document.querySelectorAll("#categories button");
   if (e.target.getAttribute("data-category")) {
@@ -103,18 +139,9 @@ const filteredCategoryButton = (e) => {
 
 categoriesContainer.addEventListener("click", filteredCategoryButton);
 
-/*
-Gestion du mode connecté
-*/
-
-// je récupère les éléments dont j'ai besoin
-const loginLink = document.getElementById("login-link");
-const editBanner = document.getElementById("edit-banner");
-const editButton = document.getElementById("edit-button");
-const categories = document.getElementById("categories");
-
-// je récupère le token (null s'il n'existe pas)
-const token = localStorage.getItem("token");
+// ==================================================
+// MODE CONNECTÉ
+// ==================================================
 
 // SI le token existe : mode connecté
 if (token) {
@@ -129,7 +156,7 @@ if (token) {
 
   editBanner.hidden = false; // j'affiche le bandeau
   editButton.hidden = false; // j'affiche "modifier"
-  categories.hidden = true; // je masque les filtres
+  categoriesContainer.hidden = true; // je masque les filtres
 } else {
   // SINON : mode visiteur
   loginLink.addEventListener("click", () => {
@@ -138,26 +165,12 @@ if (token) {
 
   editBanner.hidden = true;
   editButton.hidden = true;
-  categories.hidden = false;
+  categoriesContainer.hidden = false;
 }
 
-/*
-modale
-*/
-
-//  je récupère les éléments dont j'ai besoin
-const modal = document.getElementById("modal");
-const closeButton = document.getElementById("close-modal");
-const modalGallery = document.getElementById("modal-gallery");
-const modalTitle = document.getElementById("modal-title");
-const modalActionButton = document.getElementById("modal-action-button");
-const backButton = document.getElementById("return-modal");
-const addForm = document.getElementById("add-form");
-const categorySelect = document.getElementById("category-select");
-const imageInput = document.getElementById("image-input");
-const preview = document.getElementById("preview");
-const titleInput = document.getElementById("title-input");
-const formError = document.getElementById("form-error");
+// ==================================================
+// MODALE
+// ==================================================
 
 const resetForm = () => {
   addForm.reset();
@@ -354,3 +367,9 @@ modal.addEventListener("click", (e) => {
     closeModal();
   }
 });
+
+// ==================================================
+// LANCEMENT
+// ==================================================
+fetchAllWorks();
+fetchAllCategories();
