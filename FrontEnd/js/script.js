@@ -4,6 +4,10 @@
 const API = "http://localhost:5678/api";
 // token de connexion (null si l'utilisateur n'est pas connecté)
 const token = localStorage.getItem("token");
+// types d'image acceptés pour l'ajout d'un travail
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"];
+// taille maximale d'une image : 4 Mo (en octets)
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
 
 // ==================================================
 // DOM
@@ -279,10 +283,7 @@ const handleImageChange = () => {
   if (!file) {
     return;
   }
-  if (
-    ["image/jpeg", "image/png"].includes(file.type) &&
-    file.size < 4 * 1024 * 1024
-  ) {
+  if (ALLOWED_IMAGE_TYPES.includes(file.type) && file.size < MAX_IMAGE_SIZE) {
     formError.hidden = true;
     preview.src = URL.createObjectURL(file);
     preview.hidden = false;
