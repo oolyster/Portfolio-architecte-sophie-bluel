@@ -563,6 +563,10 @@ footer nav ul {
 	margin-top: 0;
 }
 
+#msg-error {
+	display: flex;
+}
+
 #form-error {
 	color: var(--error-color);
 	margin-top: 20px;
