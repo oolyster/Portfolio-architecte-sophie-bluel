@@ -58,12 +58,12 @@
 				<p>Vous avez un projet ? Discutons-en !</p>
 				<form action="#" method="post">
 					<label for="name">Nom</label>
-					<input type="text" name="name" id="name">
+					<input type="text" name="name" id="name" class="field">
 					<label for="email">Email</label>
-					<input type="email" name="email" id="email">
+					<input type="email" name="email" id="email" class="field">
 					<label for="message">Message</label>
-					<textarea name="message" id="message" cols="30" rows="10"></textarea>
-					<input type="submit" value="Envoyer">
+					<textarea name="message" id="message" cols="30" rows="10" class="field"></textarea>
+					<input type="submit" value="Envoyer" class="btn-primary">
 				</form>
 			</section>
 		</main>
@@ -92,15 +92,15 @@
 						<img id="preview" hidden>
 					</div>
 					<label for="title-input">Titre</label>
-					<input type="text" name="title-input" id="title-input">
+					<input type="text" name="title-input" id="title-input" class="field">
 					<label for="category-select">Catégorie</label>
-					<select id="category-select">
+					<select id="category-select" class="field">
 						<option value="" disabled selected>Choisissez une catégorie</option>
 					</select>
 					<p id="form-error" hidden></p>
 				</form>
 				<div class="modal-action">
-					<hr><button id="modal-action-button"></button>
+					<hr><button id="modal-action-button" class="btn-primary"></button>
 				</div>
 			</div>
 		</div>

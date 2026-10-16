@@ -135,6 +135,16 @@ table {
 }
 
 /** end reset css**/
+
+:root {
+	--primary-color: #1d6154;
+	--accent-color: #b1663c;
+	--upload-color: #e8f1f6;
+	--shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+
+
 body {
 	max-width: 100vw;
 	margin: auto;
@@ -158,7 +168,7 @@ h1 {
 	font-family: 'Syne';
 	font-size: 22px;
 	font-weight: 800;
-	color: #B1663C
+	color: var(--accent-color);
 }
 
 h1>span {
@@ -172,7 +182,7 @@ h2 {
 	font-family: 'Syne';
 	font-weight: 700;
 	font-size: 30px;
-	color: #1D6154
+	color: var(--primary-color);
 }
 
 a {
@@ -181,7 +191,7 @@ a {
 }
 
 a:hover {
-	color: #B1663C !important;
+	color: var(--accent-color) !important;
 }
 
 nav ul {
@@ -197,7 +207,7 @@ nav li {
 }
 
 li:hover {
-	color: #B1663C !important;
+	color: var(--accent-color) !important;
 }
 
 .wrapper {
@@ -301,10 +311,10 @@ main {
 }
 
 .filters button {
-	color: #1D6154;
+	color: var(--primary-color);
 	background-color: #fffef8;
 	margin: 0;
-	border: 1px solid #1D6154;
+	border: 1px solid var(--primary-color);
 	font-family: "Syne";
 	font-weight: 700;
 	border-radius: 60px;
@@ -316,7 +326,7 @@ main {
 
 .active-filter {
 	color: white !important;
-	background-color: #1D6154 !important;
+	background-color: var(--primary-color) !important;
 	cursor: pointer;
 }
 
@@ -341,31 +351,8 @@ main {
 	flex-direction: column;
 }
 
-#contact input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
 #contact label {
 	margin: 2em 0 1em 0;
-}
-
-#contact textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-input[type="submit"] {
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin: 2em auto;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px;
 }
 
 footer nav ul {
@@ -453,25 +440,6 @@ footer nav ul {
 	width: 420px;
 }
 
-#modal-action-button {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin: 2em auto;
-	width: 230px;
-	text-align: center;
-	border-radius: 60px;
-}
-
-#modal-action-button:disabled {
-	background-color: #a7a7a7;
-}
-
 #add-form {
 	display: flex;
 	flex-direction: column;
@@ -480,7 +448,7 @@ footer nav ul {
 }
 
 .upload-zone {
-	background-color: #e8f1f6;
+	background-color: var(--upload-color);
 	height: 170px;
 	gap: 8px;
 	display: flex;
@@ -501,7 +469,7 @@ footer nav ul {
 }
 
 #preview {
-	background-color: #e8f1f6;
+	background-color: var(--upload-color);
 	position: absolute;
 	inset: 0;
 	width: 100%;
@@ -516,16 +484,6 @@ footer nav ul {
 	font-weight: bold;
 }
 
-#title-input,
-#category-select {
-	height: 51px;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-	font-family: 'Work Sans';
-	padding-left: 16px;
-	background-color: white;
-}
-
 .upload-button {
 	background-color: #cbd6dc;
 	color: #306685 !important;
@@ -538,4 +496,49 @@ footer nav ul {
 #form-error {
 	color: red;
 	margin-top: 20px;
+}
+
+/* BOUTONS */
+
+.btn-primary {
+	font-family: 'Syne';
+	font-weight: 700;
+	height: 50px;
+	color: white;
+	background-color: var(--primary-color);
+	margin: 2em auto;
+	text-align: center;
+	border-radius: 60px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: var(--shadow);
+}
+
+input[type="submit"] {
+	width: 180px;
+}
+
+#modal-action-button {
+	width: 230px;
+}
+
+#modal-action-button:disabled {
+	background-color: #a7a7a7;
+}
+
+/* CHAMPS */
+
+.field {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: var(--shadow);
+	padding-left: 16px;
+	padding-right: 16px;
+	font-family: 'Work Sans';
+	background-color: white;
+}
+
+#contact textarea {
+	height: 150px;
 }
