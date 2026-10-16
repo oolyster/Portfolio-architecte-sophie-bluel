@@ -56,7 +56,7 @@ const fetchAllWorks = async () => {
   }
 };
 
-// fonction pour afficher les travaux dans la galerie
+// Vide la galerie puis y affiche chaque travail de la liste reçue.
 const displayGallery = (works) => {
   gallery.innerHTML = "";
   works.forEach((work) => {
@@ -65,13 +65,18 @@ const displayGallery = (works) => {
   });
 };
 
-// fonction pour créer un élément figure pour chaque travail
-const figureWork = (work) => {
-  const figure = document.createElement("figure");
+// Crée l'image d'un travail (utilisée par la galerie et par la modale).
+const createImage = (work) => {
   const image = document.createElement("img");
   image.src = work.imageUrl;
   image.alt = work.title;
-  figure.appendChild(image);
+  return image;
+};
+
+// Crée la figure d'un travail (image + titre) pour la galerie.
+const figureWork = (work) => {
+  const figure = document.createElement("figure");
+  figure.appendChild(createImage(work));
   const figureCaption = document.createElement("figcaption");
   figureCaption.textContent = work.title;
   figure.appendChild(figureCaption);
@@ -166,6 +171,13 @@ const resetForm = () => {
   preview.src = "";
 };
 
+// Affiche un message d'erreur sous le formulaire d'ajout.
+const showFormError = (message) => {
+  formError.textContent = message;
+  formError.hidden = false;
+};
+
+// Envoie le nouveau travail à l'API, met à jour les deux galeries et revient à la vue galerie.
 const submitForm = async () => {
   const formData = new FormData();
   formData.append("image", imageInput.files[0]);
@@ -181,11 +193,7 @@ const submitForm = async () => {
       body: formData,
     });
     if (!response.ok) {
-      console.error("erreur lors de l'envoi", response.status);
-      formError.hidden = false;
-      formError.textContent =
-        "Il y a eu une erreur lors de l'envoi. Veuillez réessayer.";
-      return;
+      throw new Error(`erreur API : ${response.status}`);
     }
     const newWork = await response.json();
     dataWorks.push(newWork);
@@ -195,9 +203,7 @@ const submitForm = async () => {
     showGalleryView();
   } catch (error) {
     console.error("erreur lors de l'envoi", error);
-    formError.hidden = false;
-    formError.textContent =
-      "Il y a eu une erreur lors de l'envoi. Veuillez réessayer.";
+    showFormError("Il y a eu une erreur lors de l'envoi. Veuillez réessayer.");
   }
 };
 
@@ -223,9 +229,9 @@ const handleImageChange = () => {
     preview.src = URL.createObjectURL(file);
     preview.hidden = false;
   } else {
-    formError.hidden = false;
-    formError.textContent =
-      "Le fichier attendu doit être au format JPEG ou PNG et faire moins de 4 Mo";
+    showFormError(
+      "Le fichier attendu doit être au format JPEG ou PNG et faire moins de 4 Mo",
+    );
     imageInput.value = "";
     preview.hidden = true;
   }
@@ -298,10 +304,7 @@ const displayModalGallery = (works) => {
 const modalFigure = (work) => {
   const figure = document.createElement("figure");
   figure.classList.add("modal-figure");
-  const image = document.createElement("img");
-  image.src = work.imageUrl;
-  image.alt = work.title;
-  figure.appendChild(image);
+  figure.appendChild(createImage(work));
   const trashButton = document.createElement("button");
   trashButton.setAttribute("aria-label", `Supprimer ${work.title}`);
   trashButton.addEventListener("click", () => deleteWork(work.id));
