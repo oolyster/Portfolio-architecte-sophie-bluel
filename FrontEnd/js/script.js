@@ -42,25 +42,18 @@ let dataWorks = [];
 // GALERIE
 // ==================================================
 
-// appel API pour récupérer dynamiquement les travaux de l'architechte
+// Récupère les travaux depuis l'API puis les affiche dans la galerie.
 const fetchAllWorks = async () => {
-  // appel API pour récupérer les travaux
   try {
     const result = await fetch(`${API}/works`);
-    // vérification si la requête a réussi
     if (!result.ok) {
       throw new Error(`erreur API : ${result.status}`);
     }
-    // récupération des données JSON
     dataWorks = await result.json();
-    // affichage des travaux dans la galerie
     displayGallery(dataWorks);
-    // affichage dans la console pour vérification
-    console.log("affichage des works récupérés de l'API", dataWorks);
   } catch (error) {
-    console.error("erreur lors de la récupération", error);
+    console.error("erreur lors de la récupération des travaux", error);
   }
-  return dataWorks;
 };
 
 // fonction pour afficher les travaux dans la galerie
@@ -97,44 +90,45 @@ const fetchAllCategories = async () => {
       throw new Error(`erreur API : ${result.status}`);
     }
     const dataCategories = await result.json();
+    // ajoute une fausse catégorie "Tous" (id 0) en première position pour afficher tous les travaux
     dataCategories.unshift({
       id: 0,
       name: "Tous",
     });
     allCategories = dataCategories;
-    for (let category of dataCategories) {
+    for (const category of dataCategories) {
       const button = document.createElement("button");
       button.textContent = category.name;
-      button.setAttribute("data-category", category.id);
+      button.dataset.category = category.id;
       categoriesContainer.appendChild(button);
       // le bouton "Tous" est activé par défaut
       if (category.id === 0) {
         button.classList.add("active-filter");
       }
     }
-    console.log("affichage des catégories récupérés de l'API", dataCategories);
   } catch (error) {
     console.error("erreur lors de la récupération des catégories", error);
   }
 };
 
-// gestion du clic sur les boutons de filtre
+// Filtre la galerie selon le bouton cliqué ("Tous", id 0, affiche tout).
+// Un seul écouteur sur le conteneur gère tous les boutons de filtre.
 const filteredCategoryButton = (e) => {
-  const allButtons = document.querySelectorAll("#categories button");
-  if (e.target.getAttribute("data-category")) {
-    allButtons.forEach((button) => {
-      button.classList.remove("active-filter");
-    });
-    const categoryId = parseInt(e.target.getAttribute("data-category"));
-    console.log("au clic sur le bouton", categoryId);
-    e.target.classList.add("active-filter");
-    const filteredWorks =
-      categoryId === 0
-        ? dataWorks
-        : dataWorks.filter((work) => work.categoryId === categoryId);
-    console.log("filteredWorks", filteredWorks);
-    displayGallery(filteredWorks);
+  // clic dans le conteneur mais pas sur un bouton : on ne fait rien
+  if (!e.target.dataset.category) {
+    return;
   }
+  const allButtons = categoriesContainer.querySelectorAll("button");
+  allButtons.forEach((button) => {
+    button.classList.remove("active-filter");
+  });
+  e.target.classList.add("active-filter");
+  const categoryId = Number(e.target.dataset.category);
+  const filteredWorks =
+    categoryId === 0
+      ? dataWorks
+      : dataWorks.filter((work) => work.categoryId === categoryId);
+  displayGallery(filteredWorks);
 };
 
 categoriesContainer.addEventListener("click", filteredCategoryButton);
@@ -253,7 +247,7 @@ const fillCategorySelect = () => {
   const categoriesForSelect = allCategories.filter(
     (category) => category.id !== 0,
   );
-  for (let category of categoriesForSelect) {
+  for (const category of categoriesForSelect) {
     const option = document.createElement("option");
     option.value = category.id;
     option.textContent = category.name;
@@ -272,27 +266,24 @@ const showAddView = () => {
   checkForm();
 };
 
+// Supprime un travail via l'API, puis met à jour la galerie et la modale.
 const deleteWork = async (id) => {
   try {
     const result = await fetch(`${API}/works/${id}`, {
       method: "DELETE",
       headers: {
-        accept: `*/*`,
         Authorization: `Bearer ${token}`,
       },
     });
     if (!result.ok) {
-      console.error("erreur API");
-      return;
+      throw new Error(`erreur API : ${result.status}`);
     }
-    dataWorks = dataWorks.filter((work) => work.id !== Number(id));
+    dataWorks = dataWorks.filter((work) => work.id !== id);
     displayModalGallery(dataWorks);
     displayGallery(dataWorks);
-    console.log("affichage des works récupérés de l'API", dataWorks);
   } catch (error) {
-    console.error("erreur lors de la récupération", error);
+    console.error("erreur lors de la suppression", error);
   }
-  return dataWorks;
 };
 
 const displayModalGallery = (works) => {
@@ -314,7 +305,6 @@ const modalFigure = (work) => {
   const trashButton = document.createElement("button");
   trashButton.setAttribute("aria-label", `Supprimer ${work.title}`);
   trashButton.addEventListener("click", () => deleteWork(work.id));
-  trashButton.dataset.id = work.id;
   const trashIcon = document.createElement("i");
   trashIcon.classList.add("fa-solid", "fa-trash-can");
   trashButton.appendChild(trashIcon);
