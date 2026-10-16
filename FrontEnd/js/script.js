@@ -181,9 +181,10 @@ const openModal = () => {
   showGalleryView();
 };
 
-// Ferme la modale
+// Ferme la modale et vide le formulaire d'ajout
 const closeModal = () => {
   modal.hidden = true;
+  resetForm();
 };
 
 // ---------- Vue galerie ----------
