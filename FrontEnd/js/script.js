@@ -143,29 +143,22 @@ categoriesContainer.addEventListener("click", filteredCategoryButton);
 // MODE CONNECTÉ
 // ==================================================
 
-// SI le token existe : mode connecté
+// Connecté : affiche "logout", le bandeau et le bouton "modifier", masque les filtres.
 if (token) {
-  loginLink.textContent = "logout"; // je change le texte
-  loginLink.setAttribute("href", "index.html");
-  loginLink.addEventListener("click", (event) => {
-    event.preventDefault();
-    // au clic :
-    localStorage.removeItem("token"); //   je supprime le token
-    window.location.reload(); //   je recharge la page
-  });
-
-  editBanner.hidden = false; // j'affiche le bandeau
-  editButton.hidden = false; // j'affiche "modifier"
-  categoriesContainer.hidden = true; // je masque les filtres
-} else {
-  // SINON : mode visiteur
+  loginLink.textContent = "logout";
   loginLink.addEventListener("click", () => {
-    window.location.href = "login.html"; // redirection
+    // déconnexion : on supprime le token puis on recharge la page en mode visiteur
+    localStorage.removeItem("token");
+    window.location.reload();
   });
-
-  editBanner.hidden = true;
-  editButton.hidden = true;
-  categoriesContainer.hidden = false;
+  editBanner.hidden = false;
+  editButton.hidden = false;
+  categoriesContainer.hidden = true;
+} else {
+  // Visiteur : le clic sur "login" mène à la page de connexion.
+  loginLink.addEventListener("click", () => {
+    window.location.href = "login.html";
+  });
 }
 
 // ==================================================
@@ -214,16 +207,13 @@ const submitForm = async () => {
   }
 };
 
+// Active le bouton "Valider" seulement si l'image, le titre et la catégorie sont remplis.
 const checkForm = () => {
-  if (
+  const isFormValid =
     imageInput.files.length > 0 &&
     titleInput.value.trim() !== "" &&
-    categorySelect.value !== ""
-  ) {
-    modalActionButton.disabled = false;
-  } else {
-    modalActionButton.disabled = true;
-  }
+    categorySelect.value !== "";
+  modalActionButton.disabled = !isFormValid;
 };
 
 const handleImageChange = () => {
@@ -313,20 +303,17 @@ const displayModalGallery = (works) => {
   });
 };
 
-// je crée un élément figure pour chaque travail dans la modale
+// Crée la figure d'un travail pour la galerie de la modale, avec un bouton poubelle qui supprime le travail (appel API).
 const modalFigure = (work) => {
   const figure = document.createElement("figure");
-  figure.style.position = "relative";
   figure.classList.add("modal-figure");
   const image = document.createElement("img");
   image.src = work.imageUrl;
   image.alt = work.title;
   figure.appendChild(image);
   const trashButton = document.createElement("button");
+  trashButton.setAttribute("aria-label", `Supprimer ${work.title}`);
   trashButton.addEventListener("click", () => deleteWork(work.id));
-  trashButton.style.position = "absolute";
-  trashButton.style.top = "2px";
-  trashButton.style.right = "2px";
   trashButton.dataset.id = work.id;
   const trashIcon = document.createElement("i");
   trashIcon.classList.add("fa-solid", "fa-trash-can");

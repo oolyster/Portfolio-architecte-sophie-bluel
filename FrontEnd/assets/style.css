@@ -483,6 +483,16 @@ footer nav ul {
 	flex-shrink: 0;
 }
 
+.modal-figure {
+	position: relative;
+}
+
+.modal-figure button {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+}
+
 .modal-figure img {
 	width: auto;
 	height: 105px;
