@@ -87,7 +87,7 @@ const figureWork = (work) => {
 // FILTRES
 // ==================================================
 
-// appel API pour récupérer dynamiquement les catégories des travaux
+// Récupère les catégories depuis l'API, ajoute "Tous" et affiche les boutons de filtre.
 const fetchAllCategories = async () => {
   try {
     const result = await fetch(`${API}/categories`);
@@ -101,18 +101,22 @@ const fetchAllCategories = async () => {
       name: "Tous",
     });
     allCategories = dataCategories;
-    for (const category of dataCategories) {
-      const button = document.createElement("button");
-      button.textContent = category.name;
-      button.dataset.category = category.id;
-      categoriesContainer.appendChild(button);
-      // le bouton "Tous" est activé par défaut
-      if (category.id === 0) {
-        button.classList.add("active-filter");
-      }
-    }
+    displayCategoryButtons(allCategories);
   } catch (error) {
     console.error("erreur lors de la récupération des catégories", error);
+  }
+};
+
+// Crée un bouton de filtre par catégorie ("Tous" est actif par défaut).
+const displayCategoryButtons = (categories) => {
+  for (const category of categories) {
+    const button = document.createElement("button");
+    button.textContent = category.name;
+    button.dataset.category = category.id;
+    if (category.id === 0) {
+      button.classList.add("active-filter");
+    }
+    categoriesContainer.appendChild(button);
   }
 };
 
