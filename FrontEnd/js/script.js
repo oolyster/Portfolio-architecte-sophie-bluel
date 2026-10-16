@@ -168,17 +168,155 @@ if (token) {
 // MODALE
 // ==================================================
 
+// ---------- Ouverture / fermeture ----------
+
+// Ouvre la modale sur la vue galerie
+const openModal = () => {
+  modal.hidden = false;
+  displayModalGallery(dataWorks);
+  showGalleryView();
+};
+
+// Ferme la modale
+const closeModal = () => {
+  modal.hidden = true;
+};
+
+// ---------- Vue galerie ----------
+
+// Passe la modale en vue "Galerie photo"
+const showGalleryView = () => {
+  modalTitle.textContent = "Galerie photo";
+  modalActionButton.textContent = "Ajouter une photo";
+  modalActionButton.disabled = false;
+  modalActionButton.onclick = showAddView;
+  modalGallery.hidden = false;
+  addForm.hidden = true;
+  backButton.hidden = true;
+};
+
+// Vide la galerie de la modale puis y affiche chaque travail de la liste reçue
+const displayModalGallery = (works) => {
+  modalGallery.innerHTML = "";
+  works.forEach((work) => {
+    const figureRecup = modalFigure(work);
+    modalGallery.appendChild(figureRecup);
+  });
+};
+
+// Crée la figure d'un travail pour la galerie de la modale, avec un bouton poubelle qui supprime le travail (appel API).
+const modalFigure = (work) => {
+  const figure = document.createElement("figure");
+  figure.classList.add("modal-figure");
+  figure.appendChild(createImage(work));
+  const trashButton = document.createElement("button");
+  trashButton.setAttribute("aria-label", `Supprimer ${work.title}`);
+  trashButton.addEventListener("click", () => deleteWork(work.id));
+  const trashIcon = document.createElement("i");
+  trashIcon.classList.add("fa-solid", "fa-trash-can");
+  trashButton.appendChild(trashIcon);
+  figure.appendChild(trashButton);
+  return figure;
+};
+
+// Supprime un travail via l'API, puis met à jour la galerie et la modale.
+const deleteWork = async (id) => {
+  try {
+    const result = await fetch(`${API}/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!result.ok) {
+      throw new Error(`erreur API : ${result.status}`);
+    }
+    dataWorks = dataWorks.filter((work) => work.id !== id);
+    displayModalGallery(dataWorks);
+    displayGallery(dataWorks);
+  } catch (error) {
+    console.error("erreur lors de la suppression", error);
+  }
+};
+
+// ---------- Vue ajout ----------
+
+// Passe la modale en vue "Ajout photo"
+const showAddView = () => {
+  modalTitle.textContent = "Ajout photo";
+  modalActionButton.textContent = "Valider";
+  modalActionButton.onclick = submitForm;
+  modalGallery.hidden = true;
+  addForm.hidden = false;
+  backButton.hidden = false;
+  fillCategorySelect();
+  checkForm();
+};
+
+// Remplit la liste déroulante avec les catégories (sans "Tous")
+const fillCategorySelect = () => {
+  categorySelect.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Choisissez une catégorie";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  categorySelect.appendChild(defaultOption);
+  const categoriesForSelect = allCategories.filter(
+    (category) => category.id !== 0,
+  );
+  for (const category of categoriesForSelect) {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    categorySelect.appendChild(option);
+  }
+};
+
+// Vérifie l'image choisie (JPEG ou PNG, moins de 4 Mo) : affiche l'aperçu si elle est valide, sinon un message d'erreur
+const handleImageChange = () => {
+  const file = imageInput.files[0];
+  if (!file) {
+    return;
+  }
+  if (
+    ["image/jpeg", "image/png"].includes(file.type) &&
+    file.size < 4 * 1024 * 1024
+  ) {
+    formError.hidden = true;
+    preview.src = URL.createObjectURL(file);
+    preview.hidden = false;
+  } else {
+    showFormError(
+      "Le fichier attendu doit être au format JPEG ou PNG et faire moins de 4 Mo",
+    );
+    imageInput.value = "";
+    preview.hidden = true;
+  }
+  checkForm();
+};
+
+// Active le bouton "Valider" seulement si l'image, le titre et la catégorie sont remplis.
+const checkForm = () => {
+  const isFormValid =
+    imageInput.files.length > 0 &&
+    titleInput.value.trim() !== "" &&
+    categorySelect.value !== "";
+  modalActionButton.disabled = !isFormValid;
+};
+
+// Affiche un message d'erreur sous le formulaire d'ajout
+const showFormError = (message) => {
+  formError.textContent = message;
+  formError.hidden = false;
+};
+
+// Vide le formulaire d'ajout, l'aperçu de l'image et le message d'erreur
 const resetForm = () => {
   addForm.reset();
   preview.hidden = true;
   formError.hidden = true;
   preview.src = "";
-};
-
-// Affiche un message d'erreur sous le formulaire d'ajout.
-const showFormError = (message) => {
-  formError.textContent = message;
-  formError.hidden = false;
 };
 
 // Envoie le nouveau travail à l'API, met à jour les deux galeries et revient à la vue galerie.
@@ -211,141 +349,16 @@ const submitForm = async () => {
   }
 };
 
-// Active le bouton "Valider" seulement si l'image, le titre et la catégorie sont remplis.
-const checkForm = () => {
-  const isFormValid =
-    imageInput.files.length > 0 &&
-    titleInput.value.trim() !== "" &&
-    categorySelect.value !== "";
-  modalActionButton.disabled = !isFormValid;
-};
+// ---------- Écouteurs ----------
 
-const handleImageChange = () => {
-  const file = imageInput.files[0];
-  if (!file) {
-    return;
-  }
-  if (
-    ["image/jpeg", "image/png"].includes(file.type) &&
-    file.size < 4 * 1024 * 1024
-  ) {
-    formError.hidden = true;
-    preview.src = URL.createObjectURL(file);
-    preview.hidden = false;
-  } else {
-    showFormError(
-      "Le fichier attendu doit être au format JPEG ou PNG et faire moins de 4 Mo",
-    );
-    imageInput.value = "";
-    preview.hidden = true;
-  }
-  checkForm();
-};
-
+editButton.addEventListener("click", openModal);
+closeButton.addEventListener("click", closeModal);
+backButton.addEventListener("click", showGalleryView);
 imageInput.addEventListener("change", handleImageChange);
 titleInput.addEventListener("input", checkForm);
 categorySelect.addEventListener("change", checkForm);
 
-const fillCategorySelect = () => {
-  categorySelect.innerHTML = "";
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = "Choisissez une catégorie";
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  categorySelect.appendChild(defaultOption);
-  const categoriesForSelect = allCategories.filter(
-    (category) => category.id !== 0,
-  );
-  for (const category of categoriesForSelect) {
-    const option = document.createElement("option");
-    option.value = category.id;
-    option.textContent = category.name;
-    categorySelect.appendChild(option);
-  }
-};
-
-const showAddView = () => {
-  modalTitle.textContent = "Ajout photo";
-  modalActionButton.textContent = "Valider";
-  modalActionButton.onclick = submitForm;
-  modalGallery.hidden = true;
-  addForm.hidden = false;
-  backButton.hidden = false;
-  fillCategorySelect();
-  checkForm();
-};
-
-// Supprime un travail via l'API, puis met à jour la galerie et la modale.
-const deleteWork = async (id) => {
-  try {
-    const result = await fetch(`${API}/works/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!result.ok) {
-      throw new Error(`erreur API : ${result.status}`);
-    }
-    dataWorks = dataWorks.filter((work) => work.id !== id);
-    displayModalGallery(dataWorks);
-    displayGallery(dataWorks);
-  } catch (error) {
-    console.error("erreur lors de la suppression", error);
-  }
-};
-
-const displayModalGallery = (works) => {
-  modalGallery.innerHTML = "";
-  works.forEach((work) => {
-    const figureRecup = modalFigure(work);
-    modalGallery.appendChild(figureRecup);
-  });
-};
-
-// Crée la figure d'un travail pour la galerie de la modale, avec un bouton poubelle qui supprime le travail (appel API).
-const modalFigure = (work) => {
-  const figure = document.createElement("figure");
-  figure.classList.add("modal-figure");
-  figure.appendChild(createImage(work));
-  const trashButton = document.createElement("button");
-  trashButton.setAttribute("aria-label", `Supprimer ${work.title}`);
-  trashButton.addEventListener("click", () => deleteWork(work.id));
-  const trashIcon = document.createElement("i");
-  trashIcon.classList.add("fa-solid", "fa-trash-can");
-  trashButton.appendChild(trashIcon);
-  figure.appendChild(trashButton);
-  return figure;
-};
-
-const showGalleryView = () => {
-  modalTitle.textContent = "Galerie photo";
-  modalActionButton.textContent = "Ajouter une photo";
-  modalActionButton.disabled = false;
-  modalActionButton.onclick = showAddView;
-  modalGallery.hidden = false;
-  addForm.hidden = true;
-  backButton.hidden = true;
-};
-
-// j'affiche la modale au clic sur le bouton "modifier"
-const openModal = () => {
-  modal.hidden = false;
-  displayModalGallery(dataWorks);
-  showGalleryView();
-};
-editButton.addEventListener("click", openModal);
-
-// je ferme la modale au clic sur le bouton "fermer"
-const closeModal = () => {
-  modal.hidden = true;
-};
-
-closeButton.addEventListener("click", closeModal);
-backButton.addEventListener("click", showGalleryView);
-
-// je ferme la modale au clic en dehors de la modale
+// ferme la modale au clic sur le fond gris (en dehors de la fenêtre)
 modal.addEventListener("click", (e) => {
   if (e.target === modal) {
     closeModal();
