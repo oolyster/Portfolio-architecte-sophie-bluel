@@ -375,8 +375,9 @@ footer nav ul {
 }
 
 .modal-box {
-	max-width: 630px;
-	max-height: 730px;
+	box-sizing: border-box;
+	width: 630px;
+	height: 730px;
 	background-color: white;
 	padding: 26px 30px;
 	display: flex;
@@ -384,6 +385,7 @@ footer nav ul {
 	align-items: center;
 	gap: 40px;
 	border-radius: 10px;
+	max-height: 90vh;
 }
 
 #nav-modal {
@@ -417,7 +419,10 @@ footer nav ul {
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	gap: 5px;
 	margin: 0 75px;
-	width: 420px
+	width: 420px;
+	overflow-y: auto;
+	max-height: 325px;
+	flex-shrink: 0;
 }
 
 .modal-figure {
@@ -425,8 +430,9 @@ footer nav ul {
 }
 
 .modal-figure img {
-	width: 100%;
-	height: 100%;
+	width: auto;
+	height: 105px;
+	object-fit: cover;
 }
 
 .modal-action {
@@ -434,6 +440,7 @@ footer nav ul {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-top: auto;
 }
 
 .modal-action hr {
@@ -478,7 +485,7 @@ footer nav ul {
 }
 
 #add-form label {
-	margin-top: 30px;
+	margin-top: 27px;
 	margin-bottom: 10px;
 	color: #3d3d3d;
 	font-weight: bold;
@@ -510,7 +517,7 @@ footer nav ul {
 	height: 50px;
 	color: white;
 	background-color: var(--primary-color);
-	margin: 2em auto;
+	margin: 1.8em auto;
 	text-align: center;
 	border-radius: 60px;
 	font-size: 1.2em;
