@@ -1,3 +1,5 @@
 .pseudocode/*
 .idea
 Backend/*
+node_modules
+package-lock.json
