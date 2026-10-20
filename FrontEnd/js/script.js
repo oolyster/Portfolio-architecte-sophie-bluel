@@ -249,7 +249,6 @@ const deleteWork = async (id) => {
     dataWorks = dataWorks.filter((work) => work.id !== id);
     displayModalGallery(dataWorks);
     displayGallery(dataWorks);
-    closeModal();
   } catch (error) {
     console.error("erreur lors de la suppression", error);
   }
@@ -376,7 +375,6 @@ const submitForm = async () => {
     displayModalGallery(dataWorks);
     resetForm();
     showGalleryView();
-    closeModal();
   } catch (error) {
     console.error("erreur lors de l'envoi", error);
     showFormError("Il y a eu une erreur lors de l'envoi. Veuillez réessayer.");
