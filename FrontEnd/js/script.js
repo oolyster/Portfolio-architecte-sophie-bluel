@@ -226,6 +226,12 @@ const modalFigure = (work) => {
 
 // Supprime un travail via l'API, puis met à jour la galerie et la modale.
 const deleteWork = async (id) => {
+  const confirmation = window.confirm(
+    "Voulez-vous vraiment supprimer ce travail ?",
+  );
+  if (!confirmation) {
+    return;
+  }
   try {
     const result = await fetch(`${API}/works/${id}`, {
       method: "DELETE",
