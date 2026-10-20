@@ -51,7 +51,8 @@ const fetchAllWorks = async () => {
   try {
     const result = await fetch(`${API}/works`);
     if (!result.ok) {
-      throw new Error(`erreur API : ${result.status}`);
+      console.error(`erreur API : ${result.status}`);
+      return;
     }
     dataWorks = await result.json();
     displayGallery(dataWorks);
@@ -96,7 +97,8 @@ const fetchAllCategories = async () => {
   try {
     const result = await fetch(`${API}/categories`);
     if (!result.ok) {
-      throw new Error(`erreur API : ${result.status}`);
+      console.error(`erreur API : ${result.status}`);
+      return;
     }
     const dataCategories = await result.json();
     // ajoute une fausse catégorie "Tous" (id 0) en première position pour afficher tous les travaux
@@ -240,7 +242,9 @@ const deleteWork = async (id) => {
       },
     });
     if (!result.ok) {
-      throw new Error(`erreur API : ${result.status}`);
+      console.error(`erreur API : ${result.status}`);
+      alert("Il y a eu une erreur lors de la suppression. Veuillez réessayer.");
+      return;
     }
     dataWorks = dataWorks.filter((work) => work.id !== id);
     displayModalGallery(dataWorks);
@@ -360,7 +364,11 @@ const submitForm = async () => {
       body: formData,
     });
     if (!response.ok) {
-      throw new Error(`erreur API : ${response.status}`);
+      console.error(`erreur API : ${response.status}`);
+      showFormError(
+        "Il y a eu une erreur lors de l'envoi. Veuillez réessayer.",
+      );
+      return;
     }
     const newWork = await response.json();
     dataWorks.push(newWork);
