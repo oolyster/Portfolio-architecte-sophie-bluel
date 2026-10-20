@@ -63,11 +63,15 @@ const handleLogin = async (email, password) => {
       body: JSON.stringify({ email, password }),
     });
     if (!response.ok) {
-      throw new Error(`erreur API : ${response.status}`);
+      console.error(`erreur API : ${response.status}`);
+      showError();
+      return;
     }
     const data = await response.json();
     if (!data.token) {
-      throw new Error("pas de token dans la réponse");
+      console.error("pas de token dans la réponse");
+      showError();
+      return;
     }
     localStorage.setItem("token", data.token);
     // en cas de succès redirection vers la page d'accueil
