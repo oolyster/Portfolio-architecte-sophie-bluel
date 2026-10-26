@@ -189,6 +189,7 @@ body {
 	margin: auto;
 	font-family: var(--font-body);
 	font-size: 14px;
+	background-color: #FFFEF8;
 }
 
 h1 {
@@ -255,7 +256,7 @@ header {
 	margin: auto;
 	display: flex;
 	flex-direction: column;
-	min-height: 100vh;
+	min-height: 90vh;
 }
 
 section {
@@ -407,10 +408,14 @@ main {
 /****** FOOTER *********************/
 /***********************************/
 
+footer {
+	background-color: var(--white);
+	padding: 2em;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em;
 }
 
 /***********************************/
